@@ -1,4 +1,4 @@
-package com.example.githubapp.provide
+package com.example.githubapp.provider
 
 import com.example.githubapp.api.GitApi
 import com.example.githubapp.api.common.Constant
@@ -28,7 +28,8 @@ interface Provides {
         fun repoInstance(): GitRepoImpl {
 
             if (repoInstance == null) {
-                val api = apiInstance()
+                val api =
+                    apiInstance()
                 repoInstance = GitRepoImpl(api)
             }
             return repoInstance!!

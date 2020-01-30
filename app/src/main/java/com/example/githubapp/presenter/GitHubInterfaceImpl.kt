@@ -1,16 +1,18 @@
 package com.example.githubapp.presenter
 
+import android.util.Log
 import com.example.githubapp.data.Model
-import com.example.githubapp.provide.Provides
+import com.example.githubapp.data.commit.Commit
+import com.example.githubapp.provider.Provides
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class GitHubInterfaceImpl(
-    val view: GitHubInterrface.View
-) : GitHubInterrface.Presenter {
+    val view: GitHubInterface.View
+) : GitHubInterface.Presenter {
 
-    val repository = Provides.repoInstance()
+   private val repository = Provides.repoInstance()
 
     override fun loadAllRepos() {
 
@@ -31,6 +33,27 @@ class GitHubInterfaceImpl(
                 }
             }
 
+        })
+    }
+
+    override fun loadAllCommits(name: String) {
+        repository.loadAllCommits(name).enqueue(object : Callback<MutableList<Commit>> {
+            override fun onFailure(call: Call<MutableList<Commit>>, t: Throwable) {
+
+            }
+
+            override fun onResponse(
+                call: Call<MutableList<Commit>>,
+                response: Response<MutableList<Commit>>
+            ) {
+                Log.d("RESPONSE ", response.body().toString())
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        view.loadAllCommits(body)
+                    }
+                }
+            }
         })
     }
 
