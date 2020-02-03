@@ -8,7 +8,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.githubapp.R
-import com.example.githubapp.ui.adapter.RepoAdapter
+import com.example.githubapp.adapter.RepoAdapter
 import com.example.githubapp.data.Model
 import com.example.githubapp.data.commit.Commit
 import com.example.githubapp.presenter.GitHubInterface
