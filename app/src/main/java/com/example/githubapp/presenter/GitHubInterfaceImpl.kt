@@ -3,7 +3,7 @@ package com.example.githubapp.presenter
 import android.util.Log
 import com.example.githubapp.data.Model
 import com.example.githubapp.data.commit.Commit
-import com.example.githubapp.provider.Provides
+import com.example.githubapp.provider.ApiProvides
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,7 +12,7 @@ class GitHubInterfaceImpl(
     val view: GitHubInterface.View
 ) : GitHubInterface.Presenter {
 
-   private val repository = Provides.repoInstance()
+    private val repository = ApiProvides.create()
 
     override fun loadAllRepos() {
 
@@ -37,7 +37,7 @@ class GitHubInterfaceImpl(
     }
 
     override fun loadAllCommits(name: String) {
-        repository.loadAllCommits(name).enqueue(object : Callback<MutableList<Commit>> {
+        repository.loadCommits(name).enqueue(object : Callback<MutableList<Commit>> {
             override fun onFailure(call: Call<MutableList<Commit>>, t: Throwable) {
 
             }
@@ -56,5 +56,6 @@ class GitHubInterfaceImpl(
             }
         })
     }
+
 
 }

@@ -7,12 +7,15 @@ interface GitHubInterface {
     interface Presenter {
         fun loadAllRepos()
 
-        fun loadAllCommits(name:String)
+        fun loadAllCommits(name: String)
+
     }
 
     interface View {
         fun loadAllRepos(list: MutableList<Model>)
 
-        fun loadAllCommits(commits:MutableList<Commit>)
+        fun loadAllCommits(commits: MutableList<Commit>)
+
+
     }
 }

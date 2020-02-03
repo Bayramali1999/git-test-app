@@ -16,11 +16,14 @@ class CommitFragment : Fragment(R.layout.fragment_home) {
         val heshs = mutableListOf<String>()
 
         commits.forEach {
-            heshs.add(it.sha.substring(15))
+            heshs.add("#${it.sha.substring(17)}...")
         }
 
         spinner.adapter =
-            ArrayAdapter<String>(activity!!, android.R.layout.simple_list_item_1, heshs)
+            ArrayAdapter<String>(
+                activity!!,
+                android.R.layout.simple_list_item_1, heshs
+            )
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {

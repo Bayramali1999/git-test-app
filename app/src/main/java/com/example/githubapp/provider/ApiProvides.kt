@@ -1,39 +1,24 @@
 package com.example.githubapp.provider
 
 import com.example.githubapp.api.GitApi
-import com.example.githubapp.api.common.Constant
-import com.example.githubapp.repo.GitRepoImpl
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-interface Provides {
+object ApiProvides {
 
-    companion object {
-        var apiInstance: GitApi? = null
-        fun apiInstance(): GitApi {
-            if (apiInstance == null) {
-                val retrofit = Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(Constant.BASE_URL)
-                    .build()
+    private const val BASE_URL = "https://api.github.com/"
+    const val MY_REPOS = "users/Bayramali1999/repos"
+    const val MY_COMMITS = "repos/Bayramali1999/{name}/commits"
 
-                apiInstance = retrofit.create(GitApi::class.java)
-            }
-            return apiInstance!!
+    var apiInstance: GitApi? = null
+    fun create(): GitApi {
+        if (apiInstance == null) {
+            val retrofit = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(BASE_URL)
+                .build()
+            apiInstance = retrofit.create(GitApi::class.java)
         }
-
-
-        var repoInstance: GitRepoImpl? = null
-
-        fun repoInstance(): GitRepoImpl {
-
-            if (repoInstance == null) {
-                val api =
-                    apiInstance()
-                repoInstance = GitRepoImpl(api)
-            }
-            return repoInstance!!
-        }
+        return apiInstance!!
     }
-
 }

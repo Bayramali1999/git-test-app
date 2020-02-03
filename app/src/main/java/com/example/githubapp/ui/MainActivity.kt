@@ -8,22 +8,20 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.githubapp.R
-import com.example.githubapp.adapter.RepoAdapter
-import com.example.githubapp.adapter.listener.OnItemClickListener
+import com.example.githubapp.ui.adapter.RepoAdapter
 import com.example.githubapp.data.Model
 import com.example.githubapp.data.commit.Commit
 import com.example.githubapp.presenter.GitHubInterface
 import com.example.githubapp.presenter.GitHubInterfaceImpl
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
-class MainActivity : AppCompatActivity(), GitHubInterface.View, OnItemClickListener {
+class MainActivity : AppCompatActivity(), GitHubInterface.View {
 
     private var fragment: CommitFragment? = null
-    private val list = mutableListOf<Model>()
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val adapter by lazy(LazyThreadSafetyMode.NONE)
-    { RepoAdapter(this, list) }
+    private lateinit var adapter: RepoAdapter
 
     private var presenter: GitHubInterfaceImpl? = null
 
@@ -32,14 +30,16 @@ class MainActivity : AppCompatActivity(), GitHubInterface.View, OnItemClickListe
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fragment = CommitFragment()
-        presenter = GitHubInterfaceImpl(this)
-        presenter?.loadAllRepos()
-
-        rv_repos.adapter = adapter
+        init()
 
         setUpNavView()
         setUpFragment()
+    }
+
+    private fun init() {
+        fragment = CommitFragment()
+        presenter = GitHubInterfaceImpl(this)
+        presenter?.loadAllRepos()
     }
 
     private fun setUpFragment() {
@@ -56,24 +56,23 @@ class MainActivity : AppCompatActivity(), GitHubInterface.View, OnItemClickListe
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         nav_view.setupWithNavController(navController)
-
     }
 
-    override fun loadAllRepos(myList: MutableList<Model>) {
-        list.clear()
-        list.addAll(myList)
-        adapter.notifyItemRangeInserted(0, myList.size)
+    override fun loadAllRepos(list: MutableList<Model>) {
+        adapter = RepoAdapter(
+            this,
+            list
+        ) { name ->
+            presenter?.loadAllCommits(name)
+            drawer_layout.closeDrawers()
+        }
+
+
+        rv_repos.adapter = adapter
     }
 
     override fun loadAllCommits(commits: MutableList<Commit>) {
-        //TODO() loaded all commits
-
         fragment?.getList(commits)
-    }
-
-    override fun onItemClicked(name: String) {
-        presenter?.loadAllCommits(name)
-        drawer_layout.closeDrawers()
     }
 
     override fun onSupportNavigateUp(): Boolean {
